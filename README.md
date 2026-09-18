@@ -1,4 +1,4 @@
-# InfuseBypassAppleTV
+# InfuseSecurityTest
 
 A defensive, telemetry-only ElleKit tweak for authorized testing of Infuse on
 tvOS. It targets `com.firecore.infuse`, observes selected security-relevant
@@ -16,31 +16,18 @@ Requirements:
 - ElleKit providing the `mobilesubstrate` package; and
 - Infuse installed with bundle identifier `com.firecore.infuse`.
 
-Add this repository in PurePKG:
-
-```text
-https://pepe424.github.io/infuseBypassAppleTV/
-```
-
-On the Apple TV:
-
-1. Open **PurePKG**.
-2. Open **Browse** and select the **+** button.
-3. Enter the repository URL above and select **OK**.
-4. Refresh sources if PurePKG does not refresh automatically.
-5. Search for **InfuseBypassAppleTV**.
-6. Select **Install**, open **Queued**, and choose **Perform Actions**.
-7. Force-quit and reopen Infuse, or reboot userspace if the tweak does not load.
+Install the generated `appletvos-arm64` DEB through PurePKG, then force-quit
+and reopen Infuse (or reboot userspace if the tweak does not load).
 
 The package installs only:
 
 ```text
-/Library/MobileSubstrate/DynamicLibraries/InfuseBypassAppleTV.dylib
-/Library/MobileSubstrate/DynamicLibraries/InfuseBypassAppleTV.plist
+/Library/MobileSubstrate/DynamicLibraries/InfuseSecurityTest.dylib
+/Library/MobileSubstrate/DynamicLibraries/InfuseSecurityTest.plist
 ```
 
 ElleKit loads the tweak only into `com.firecore.infuse` through the bundle
-filter in `InfuseBypassAppleTV.plist`. The Infuse IPA is not modified.
+filter in `InfuseSecurityTest.plist`. The Infuse IPA is not modified.
 
 ## Verify telemetry
 
@@ -49,13 +36,13 @@ opening and using Infuse:
 
 ```sh
 log stream --style compact \
-  --predicate 'eventMessage CONTAINS[c] "InfuseBypassAppleTV"'
+  --predicate 'eventMessage CONTAINS[c] "InfuseSecurityTest"'
 ```
 
 Expected startup output includes a line similar to:
 
 ```text
-[InfuseBypassAppleTV] loaded in com.firecore.infuse; telemetry is pass-through and stores no data
+[InfuseSecurityTest] loaded in com.firecore.infuse; telemetry is pass-through and stores no data
 ```
 
 The tweak observes:
@@ -77,7 +64,6 @@ for compatibility with the tvOS 26.6 test device.
 THEOS="$HOME/theos" make clean package FINALPACKAGE=1
 ```
 
-The resulting `appletvos-arm64` package is written to `packages/`. The package
-feed in `docs/` is published with GitHub Pages.
+The resulting `appletvos-arm64` package is written to `packages/`.
 
 PurePKG usage reference: https://docs.palera.in/installing-palera1n-atv/using-purePKG.html

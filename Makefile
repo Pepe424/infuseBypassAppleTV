@@ -4,11 +4,11 @@ INSTALL_TARGET_PROCESSES := infuse
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME := InfuseBypassAppleTV
+TWEAK_NAME := InfuseSecurityTest
 
-InfuseBypassAppleTV_FILES := InfuseBypass/InfuseBypass.mm
-InfuseBypassAppleTV_USE_MODULES := 0
-InfuseBypassAppleTV_CFLAGS := -fobjc-arc -Wno-deprecated-declarations
-InfuseBypassAppleTV_FRAMEWORKS := Foundation
+InfuseSecurityTest_FILES := InfuseSecurityTest.mm
+InfuseSecurityTest_USE_MODULES := 0
+InfuseSecurityTest_CFLAGS := -fobjc-arc -Wno-deprecated-declarations
+InfuseSecurityTest_FRAMEWORKS := Foundation
 
 include $(THEOS_MAKE_PATH)/tweak.mk

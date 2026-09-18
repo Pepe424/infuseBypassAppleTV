@@ -1,124 +1,144 @@
 //
-//  InfuseBypass.m
-//  InfuseBypass
+//  InfuseSecurityTest.mm
 //
-//  Created by tylinux on 2025/12/27.
+//  Defensive, pass-through telemetry for an authorized Infuse security test.
+//  This code observes selected calls and always preserves the original result.
 //
+
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
-#import <mach-o/dyld.h>
-#import <strings.h>
 
-@interface InfuseBypass : NSObject
-@end
+static NSString *const ISTTargetBundleIdentifier = @"com.firecore.infuse";
 
-@implementation InfuseBypass
+static IMP ISTOriginalObjCIAPVersionStatus = NULL;
+static IMP ISTOriginalSwiftIAPVersionStatus = NULL;
+static IMP ISTOriginalIsFeaturePurchased = NULL;
+static IMP ISTOriginalContainerURL = NULL;
+static IMP ISTOriginalDefaultContainer = NULL;
+static IMP ISTOriginalContainerWithIdentifier = NULL;
 
-+ (void)load {
-    NSLog(@"Infuse Bypass init");
-    Class HookClass = InfuseBypass.class;
-    // Hook -[FCInAppPurchaseServiceFreemium iapVersionStatus]
-    Class iapClass = objc_getClass("FCInAppPurchaseServiceFreemium");
-    Method originalIapMethod = class_getInstanceMethod(iapClass, NSSelectorFromString(@"iapVersionStatus"));
-    Method swizzledIapMethod = class_getInstanceMethod(HookClass, @selector(returnTrue));
+static void ISTLog(NSString *format, ...) NS_FORMAT_FUNCTION(1, 2);
 
-    if (originalIapMethod && swizzledIapMethod) {
-        method_exchangeImplementations(originalIapMethod, swizzledIapMethod);
+static void ISTLog(NSString *format, ...) {
+    va_list arguments;
+    va_start(arguments, format);
+    NSString *message = [[NSString alloc] initWithFormat:format arguments:arguments];
+    va_end(arguments);
+    NSLog(@"[InfuseSecurityTest] %@", message);
+}
+
+static NSInteger ISTObservedObjCIAPVersionStatus(id self, SEL selector) {
+    NSInteger result = ((NSInteger (*)(id, SEL))ISTOriginalObjCIAPVersionStatus)(self, selector);
+    ISTLog(@"%@: iapVersionStatus returned %lld (unchanged)",
+           NSStringFromClass([self class]), (long long)result);
+    return result;
+}
+
+static NSInteger ISTObservedSwiftIAPVersionStatus(id self, SEL selector) {
+    NSInteger result = ((NSInteger (*)(id, SEL))ISTOriginalSwiftIAPVersionStatus)(self, selector);
+    ISTLog(@"%@: iapVersionStatus returned %lld (unchanged)",
+           NSStringFromClass([self class]), (long long)result);
+    return result;
+}
+
+static BOOL ISTObservedIsFeaturePurchased(id self, SEL selector, NSInteger feature, id *tillDate) {
+    BOOL result = ((BOOL (*)(id, SEL, NSInteger, id *))ISTOriginalIsFeaturePurchased)(
+        self, selector, feature, tillDate);
+    ISTLog(@"%@: isFeaturePurchased:%lld returned %@ (unchanged)",
+           NSStringFromClass([self class]), (long long)feature, result ? @"YES" : @"NO");
+    return result;
+}
+
+static NSURL *ISTObservedContainerURL(id self, SEL selector, NSString *groupIdentifier) {
+    NSURL *result = ((NSURL *(*)(id, SEL, NSString *))ISTOriginalContainerURL)(
+        self, selector, groupIdentifier);
+    ISTLog(@"NSFileManager app-group lookup for %@ returned %@ (unchanged)",
+           groupIdentifier ?: @"<nil>", result ? @"a URL" : @"nil");
+    return result;
+}
+
+static id ISTObservedDefaultContainer(id self, SEL selector) {
+    id result = ((id (*)(id, SEL))ISTOriginalDefaultContainer)(self, selector);
+    ISTLog(@"CKContainer defaultContainer returned %@ (unchanged)",
+           result ? @"an object" : @"nil");
+    return result;
+}
+
+static id ISTObservedContainerWithIdentifier(id self, SEL selector, NSString *identifier) {
+    id result = ((id (*)(id, SEL, NSString *))ISTOriginalContainerWithIdentifier)(
+        self, selector, identifier);
+    ISTLog(@"CKContainer lookup for %@ returned %@ (unchanged)",
+           identifier ?: @"<nil>", result ? @"an object" : @"nil");
+    return result;
+}
+
+static void ISTInstallInstanceHook(Class targetClass, SEL selector, IMP replacement,
+                                   IMP *original) {
+    if (targetClass == Nil || *original != NULL) {
+        return;
     }
 
-    // Hook Swift -[Infuse.InAppPurchaseServiceFreemiumSK2 iapVersionStatus]
-    Class swiftIapClass = objc_getClass("_TtC6infuse31InAppPurchaseServiceFreemiumSK2");
-    Method originalSwiftIapMethod = class_getInstanceMethod(swiftIapClass, NSSelectorFromString(@"iapVersionStatus"));
-    Method swizzledSwiftIapMethod = class_getInstanceMethod(HookClass, @selector(returnTrue));
-
-    if (originalSwiftIapMethod && swizzledSwiftIapMethod) {
-        method_exchangeImplementations(originalSwiftIapMethod, swizzledSwiftIapMethod);
+    Method method = class_getInstanceMethod(targetClass, selector);
+    if (method == NULL) {
+        return;
     }
 
-    // Hook -[Infuse.InAppPurchaseServiceFreemiumSK2 isFeaturePurchased:tillDate:]
-    Method originalSK2PurchaseMethod = class_getInstanceMethod(swiftIapClass, @selector(isFeaturePurchased:tillDate:));
-    Method swizzledSK2PurchaseMethod = class_getInstanceMethod(HookClass, @selector(isFeaturePurchased:tillDate:));
+    *original = method_setImplementation(method, replacement);
+    ISTLog(@"observing -[%@ %@]", NSStringFromClass(targetClass),
+           NSStringFromSelector(selector));
+}
 
-    if (originalSK2PurchaseMethod && swizzledSK2PurchaseMethod) {
-        method_exchangeImplementations(originalSK2PurchaseMethod, swizzledSK2PurchaseMethod);
+static void ISTInstallClassHook(Class targetClass, SEL selector, IMP replacement,
+                                IMP *original) {
+    if (targetClass == Nil) {
+        return;
     }
+    ISTInstallInstanceHook(object_getClass(targetClass), selector, replacement, original);
+}
 
-    // Hook NSFileManager containerURLForSecurityApplicationGroupIdentifier:
-    Class fileManagerClass = objc_getClass("NSFileManager");
-    Method originalFMMethod = class_getInstanceMethod(fileManagerClass, @selector(containerURLForSecurityApplicationGroupIdentifier:));
-    Method swizzledFMMethod = class_getInstanceMethod(HookClass, @selector(containerURLForSecurityApplicationGroupIdentifier:));
+static void ISTInstallHooks(void) {
+    Class objcIAPClass = objc_getClass("FCInAppPurchaseServiceFreemium");
+    ISTInstallInstanceHook(objcIAPClass, NSSelectorFromString(@"iapVersionStatus"),
+                           (IMP)ISTObservedObjCIAPVersionStatus,
+                           &ISTOriginalObjCIAPVersionStatus);
 
-    if (originalFMMethod && swizzledFMMethod) {
-        method_exchangeImplementations(originalFMMethod, swizzledFMMethod);
-    }
-    // Hook CKContainer defaultContainer
+    Class swiftIAPClass = objc_getClass("_TtC6infuse31InAppPurchaseServiceFreemiumSK2");
+    ISTInstallInstanceHook(swiftIAPClass, NSSelectorFromString(@"iapVersionStatus"),
+                           (IMP)ISTObservedSwiftIAPVersionStatus,
+                           &ISTOriginalSwiftIAPVersionStatus);
+    ISTInstallInstanceHook(swiftIAPClass, NSSelectorFromString(@"isFeaturePurchased:tillDate:"),
+                           (IMP)ISTObservedIsFeaturePurchased,
+                           &ISTOriginalIsFeaturePurchased);
+
+    ISTInstallInstanceHook([NSFileManager class],
+                           @selector(containerURLForSecurityApplicationGroupIdentifier:),
+                           (IMP)ISTObservedContainerURL, &ISTOriginalContainerURL);
+
     Class cloudKitClass = objc_getClass("CKContainer");
-    Method originalDefaultMethod = class_getClassMethod(cloudKitClass, @selector(defaultContainer));
-    Method swizzledDefaultMethod = class_getClassMethod(HookClass, @selector(defaultContainer));
+    ISTInstallClassHook(cloudKitClass, NSSelectorFromString(@"defaultContainer"),
+                        (IMP)ISTObservedDefaultContainer, &ISTOriginalDefaultContainer);
+    ISTInstallClassHook(cloudKitClass, NSSelectorFromString(@"containerWithIdentifier:"),
+                        (IMP)ISTObservedContainerWithIdentifier,
+                        &ISTOriginalContainerWithIdentifier);
+}
 
-    if (originalDefaultMethod && swizzledDefaultMethod) {
-        method_exchangeImplementations(originalDefaultMethod, swizzledDefaultMethod);
+__attribute__((constructor)) static void ISTInitialize(void) {
+    @autoreleasepool {
+        NSString *bundleIdentifier = [NSBundle mainBundle].bundleIdentifier;
+        if (![bundleIdentifier isEqualToString:ISTTargetBundleIdentifier]) {
+            ISTLog(@"refusing to initialize in unexpected bundle %@",
+                   bundleIdentifier ?: @"<nil>");
+            return;
+        }
+
+        ISTLog(@"loaded in %@; telemetry is pass-through and stores no data",
+               bundleIdentifier);
+        ISTInstallHooks();
+
+        // Swift and CloudKit classes may become visible after tweak construction.
+        // A main-queue retry installs only hooks that were unavailable above.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            ISTInstallHooks();
+        });
     }
-
-    // Hook CKContainer containerWithIdentifier:
-    Method originalIdentifierMethod = class_getClassMethod(cloudKitClass, @selector(containerWithIdentifier:));
-    Method swizzledIdentifierMethod = class_getClassMethod(HookClass, @selector(containerWithIdentifier:));
-
-    if (originalIdentifierMethod && swizzledIdentifierMethod) {
-        method_exchangeImplementations(originalIdentifierMethod, swizzledIdentifierMethod);
-    }
 }
-
-- (BOOL)returnTrue {
-    return YES;
-}
-- (BOOL)isFeaturePurchased:(long long)purchased tillDate:(id *)date {
-    return YES;
-}
-- (NSURL *)containerURLForSecurityApplicationGroupIdentifier:(NSString *)groupIdentifier {
-    NSString *homeDirectory = NSHomeDirectory();
-    NSString *containerBasePath = [homeDirectory stringByAppendingPathComponent:@"Documents/ApplicationGroupContainers"];
-    NSURL *baseURL = [NSURL fileURLWithPath:containerBasePath isDirectory:YES];
-    NSURL *containerURL = [baseURL URLByAppendingPathComponent:groupIdentifier];
-
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *containerPath = [containerURL path];
-    BOOL containerExists = [fileManager fileExistsAtPath:containerPath];
-
-    if (!containerExists) {
-        NSError *error = nil;
-
-        [fileManager createDirectoryAtURL:containerURL
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:&error];
-
-        NSURL *appSupportURL = [containerURL URLByAppendingPathComponent:@"Library/Application Support"];
-        [fileManager createDirectoryAtURL:appSupportURL
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:&error];
-
-        NSURL *cachesURL = [containerURL URLByAppendingPathComponent:@"Library/Caches"];
-        [fileManager createDirectoryAtURL:cachesURL
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:&error];
-
-        NSURL *preferencesURL = [containerURL URLByAppendingPathComponent:@"Library/Preferences"];
-        [fileManager createDirectoryAtURL:preferencesURL
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:&error];
-    }
-
-    return containerURL;
-}
-+ (id)defaultContainer {
-    return nil;
-}
-+ (id)containerWithIdentifier:(NSString *)identifier {
-    return nil;
-}
-
-@end

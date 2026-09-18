@@ -1,7 +1,7 @@
 //
-//  InfuseSecurityTest.mm
+//  InfuseBypassAppleTV.mm
 //
-//  Defensive, pass-through telemetry for an authorized Infuse security test.
+//  Pass-through diagnostic telemetry for Infuse on jailbroken tvOS.
 //  This code observes selected calls and always preserves the original result.
 //
 
@@ -24,7 +24,7 @@ static void ISTLog(NSString *format, ...) {
     va_start(arguments, format);
     NSString *message = [[NSString alloc] initWithFormat:format arguments:arguments];
     va_end(arguments);
-    NSLog(@"[InfuseSecurityTest] %@", message);
+    NSLog(@"[InfuseBypassAppleTV] %@", message);
 }
 
 static NSInteger ISTObservedObjCIAPVersionStatus(id self, SEL selector) {

@@ -1,17 +1,17 @@
 Origin: Pepe424
-Label: Infuse Security Test
+Label: InfuseBypassAppleTV
 Suite: stable
 Codename: stable
 Version: 1.0
 Architectures: appletvos-arm64
 Components: main
-Description: Defensive Infuse telemetry packages for tvOS
-Date: Fri, 18 Sep 2026 14:21:55 UTC
+Description: Diagnostic telemetry packages for Infuse on jailbroken tvOS
+Date: Fri, 18 Sep 2026 14:29:07 UTC
 MD5Sum:
- de504743054a614e5fb14bebeeea1a49 611 Packages
- 6354712520f0db299041c987955d236f 434 Packages.gz
- a99df476c4a4a3813cdbcbefae6075b5 455 Packages.bz2
+ 51fa53afc267f5009614cd7543a3b43d 603 Packages
+ feda0a8b02de6ccf98b04f02a779e104 424 Packages.gz
+ c0eade210e89e21f079b79d82471d68e 454 Packages.bz2
 SHA256:
- 853264f26a84bb01717132c25278b1ad39bf6d0b39011a64720367a442323d96 611 Packages
- 3734f8024cd4fa47e47d15d3ac42a46a5a109d163bd4a1c51f56974d5824a99a 434 Packages.gz
- 1336d736c6256e4eaa68347ef4df046fd0d9dd7843052be587a71aa06914a07d 455 Packages.bz2
+ e65fbd89d7a0194218579e63a547dff820165bbf12dbc42aedcfed0395e4b445 603 Packages
+ f3381ef519a7fdec37e5e052a61c7bf079f476233eea342dffd6fdddf6e1f3bd 424 Packages.gz
+ eb8f41afdc99035424db47c73afca7b8b8a18ae0b4270fd51236b22e512449a1 454 Packages.bz2

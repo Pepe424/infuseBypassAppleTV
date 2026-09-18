@@ -1,17 +1,17 @@
-Package: com.pepe424.infusesecuritytest
+Package: com.pepe424.infusebypassappletv
 Version: 1.0.0
 Architecture: appletvos-arm64
 Maintainer: Pepe424
 Installed-Size: 72
 Depends: mobilesubstrate (>= 0.9.5000)
-Filename: debs/com.pepe424.infusesecuritytest_1.0.0_appletvos-arm64.deb
-Size: 4290
-MD5sum: 96f4ed9576107e8d4b9b11fb96a13913
-SHA1: f3521fa51c8aaa808bb365b38a1bf2df3191aeed
-SHA256: 605781325a8e31f9711969791be8931c900c1e6a5814332b6c381561ad1381be
+Filename: debs/com.pepe424.infusebypassappletv_1.0.0_appletvos-arm64.deb
+Size: 4280
+MD5sum: b9d166682aca50cf304605b3cb9a8776
+SHA1: 3a1b0016c0cf9d5649a3084d1c5b0491f75d14de
+SHA256: d46d25111aeaab9a76d0d889a248f7441b93e5c7c6f07500ba47e5ad409011ba
 Section: Tweaks
 Homepage: https://github.com/Pepe424/infuseBypassAppleTV
-Description: Pass-through security telemetry for authorized testing of Infuse on tvOS.
+Description: Pass-through diagnostic telemetry for Infuse on jailbroken tvOS.
 Author: Pepe424
-Name: Infuse Security Test
+Name: InfuseBypassAppleTV
 

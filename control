@@ -1,8 +1,8 @@
-Package: com.pepe424.infusesecuritytest
-Name: Infuse Security Test
+Package: com.pepe424.infusebypassappletv
+Name: InfuseBypassAppleTV
 Version: 1.0.0
 Architecture: appletvos-arm64
-Description: Pass-through security telemetry for authorized testing of Infuse on tvOS.
+Description: Pass-through diagnostic telemetry for Infuse on jailbroken tvOS.
 Maintainer: Pepe424
 Author: Pepe424
 Section: Tweaks

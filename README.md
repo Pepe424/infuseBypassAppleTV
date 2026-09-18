@@ -1,4 +1,4 @@
-# Infuse Security Test for Apple TV
+# InfuseBypassAppleTV
 
 A defensive, telemetry-only ElleKit tweak for authorized testing of Infuse on
 tvOS. It targets `com.firecore.infuse`, observes selected security-relevant
@@ -28,19 +28,19 @@ On the Apple TV:
 2. Open **Browse** and select the **+** button.
 3. Enter the repository URL above and select **OK**.
 4. Refresh sources if PurePKG does not refresh automatically.
-5. Search for **Infuse Security Test**.
+5. Search for **InfuseBypassAppleTV**.
 6. Select **Install**, open **Queued**, and choose **Perform Actions**.
 7. Force-quit and reopen Infuse, or reboot userspace if the tweak does not load.
 
 The package installs only:
 
 ```text
-/Library/MobileSubstrate/DynamicLibraries/InfuseSecurityTest.dylib
-/Library/MobileSubstrate/DynamicLibraries/InfuseSecurityTest.plist
+/Library/MobileSubstrate/DynamicLibraries/InfuseBypassAppleTV.dylib
+/Library/MobileSubstrate/DynamicLibraries/InfuseBypassAppleTV.plist
 ```
 
 ElleKit loads the tweak only into `com.firecore.infuse` through the bundle
-filter in `InfuseSecurityTest.plist`. The Infuse IPA is not modified.
+filter in `InfuseBypassAppleTV.plist`. The Infuse IPA is not modified.
 
 ## Verify telemetry
 
@@ -49,13 +49,13 @@ opening and using Infuse:
 
 ```sh
 log stream --style compact \
-  --predicate 'eventMessage CONTAINS[c] "InfuseSecurityTest"'
+  --predicate 'eventMessage CONTAINS[c] "InfuseBypassAppleTV"'
 ```
 
 Expected startup output includes a line similar to:
 
 ```text
-[InfuseSecurityTest] loaded in com.firecore.infuse; telemetry is pass-through and stores no data
+[InfuseBypassAppleTV] loaded in com.firecore.infuse; telemetry is pass-through and stores no data
 ```
 
 The tweak observes:

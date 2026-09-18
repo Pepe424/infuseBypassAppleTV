@@ -21,6 +21,30 @@ THEOS="$HOME/theos" make clean package FINALPACKAGE=1
 The output package is written to `packages/` and has package identifier
 `com.pepe424.infusesecuritytestattack`.
 
+## Publish through a private PurePKG endpoint
+
+The `repository/` directory is a complete PurePKG feed containing `Release`,
+plain and compressed package indexes, and the internal DEB. Configure your
+private HTTPS hook to serve the contents of this directory as the URL root.
+
+For example, if the hook exposes it at:
+
+```text
+https://packages.example.internal/infuse/
+```
+
+then add that exact base URL to PurePKG. PurePKG will request `Release`,
+`Packages` or a compressed variant, and the path under `debs/`.
+
+To rebuild both the package and repository metadata:
+
+```sh
+THEOS="$HOME/theos" ./build-repository.sh
+```
+
+The generator verifies both bundle safeguards before building and refuses to
+publish unless they are exactly `com.firecore.infuse.securitytest`.
+
 ## Install on the authorized test device
 
 Because the repository is private, copy the DEB to the Apple TV over SSH and

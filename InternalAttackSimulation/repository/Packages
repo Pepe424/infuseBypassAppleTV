@@ -1,0 +1,17 @@
+Package: com.pepe424.infusesecuritytestattack
+Version: 1.0.0~internal1
+Architecture: appletvos-arm64
+Maintainer: Pepe424
+Installed-Size: 76
+Depends: mobilesubstrate (>= 0.9.5000)
+Filename: debs/com.pepe424.infusesecuritytestattack_1.0.0~internal1_appletvos-arm64.deb
+Size: 5616
+MD5sum: 2ebc6c9cd250d96e894c8f1d656b0f89
+SHA1: 7837e57907518bc07692b0c19845e5e87e5c7730
+SHA256: 00c37a9293e9a5f34dc9c65a8b549efac4cea2b39972afb88bb287a234e38610
+Section: Tweaks
+Homepage: https://github.com/Pepe424/infuseBypassAppleTV
+Description: Internal active hook simulation for the Infuse security-test build.
+Author: Pepe424
+Name: InfuseAttackSimulation
+

@@ -1,0 +1,17 @@
+Origin: Infuse Internal Security Test
+Label: InfuseAttackSimulation
+Suite: internal
+Codename: internal
+Version: 1.0
+Architectures: appletvos-arm64
+Components: main
+Description: Internal attack-simulation packages for the isolated Infuse test build
+Date: Fri, 18 Sep 2026 15:40:09 UTC
+MD5Sum:
+ cb47473450e543563b81bd2babe5e386 639 Packages
+ 80f37d4e6a766231ab44e5025a85a1e1 428 Packages.gz
+ 8099e344924a28a7265c449db3c0ae0e 473 Packages.bz2
+SHA256:
+ 3103a21ebaa545973623b3f45475e00208a21a39ebb2170f8e4705d86c707697 639 Packages
+ 88e2340c57601289531fcd1127121d6369ce711c1a67df5911699706378141e7 428 Packages.gz
+ 0e5f3fc8c4f1bb10f56b408328b8f9673d4cb5d668f7e833d44b14aedbb4ddf9 473 Packages.bz2

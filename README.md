@@ -1,5 +1,10 @@
 # InfuseSecurityTest
 
+> **Internal branch:** the active attack simulator for the isolated
+> `com.firecore.infuse.securitytest` build is in
+> [`InternalAttackSimulation/`](InternalAttackSimulation/README.md). The root
+> `InfuseSecurityTest` package remains pass-through telemetry.
+
 InfuseSecurityTest 1.1.1 is a defensive, telemetry-only ElleKit tweak for
 authorized testing of Infuse on jailbroken tvOS. It targets only
 `com.firecore.infuse`, observes selected security-relevant calls, and returns

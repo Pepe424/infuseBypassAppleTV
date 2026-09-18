@@ -16,8 +16,14 @@ Requirements:
 - ElleKit providing the `mobilesubstrate` package; and
 - Infuse installed with bundle identifier `com.firecore.infuse`.
 
-Install the generated `appletvos-arm64` DEB through PurePKG, then force-quit
-and reopen Infuse (or reboot userspace if the tweak does not load).
+Add this repository URL to PurePKG:
+
+```text
+https://pepe424.github.io/infuseBypassAppleTV/
+```
+
+Refresh sources, search for **InfuseSecurityTest**, and install it. Then
+force-quit and reopen Infuse (or reboot userspace if the tweak does not load).
 
 The package installs only:
 

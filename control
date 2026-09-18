@@ -1,10 +1,12 @@
-Package: com.tylinux.infusesecuritytest
+Package: com.pepe424.infusesecuritytest
 Name: InfuseSecurityTest
 Version: 1.1.0
 Architecture: appletvos-arm64
 Description: Pass-through diagnostic telemetry for Infuse on jailbroken tvOS.
-Maintainer: tylinux
+Maintainer: Pepe424
 Author: tylinux
 Section: Tweaks
 Depends: mobilesubstrate (>= 0.9.5000)
-Homepage: https://github.com/tylinux/infuseBypass
+Conflicts: com.pepe424.infusebypassappletv
+Replaces: com.pepe424.infusebypassappletv
+Homepage: https://github.com/Pepe424/infuseBypassAppleTV

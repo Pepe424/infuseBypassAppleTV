@@ -1,0 +1,17 @@
+Origin: Pepe424
+Label: Infuse Security Test
+Suite: stable
+Codename: stable
+Version: 1.0
+Architectures: appletvos-arm64
+Components: main
+Description: Defensive Infuse telemetry packages for tvOS
+Date: Fri, 18 Sep 2026 14:21:55 UTC
+MD5Sum:
+ de504743054a614e5fb14bebeeea1a49 611 Packages
+ 6354712520f0db299041c987955d236f 434 Packages.gz
+ a99df476c4a4a3813cdbcbefae6075b5 455 Packages.bz2
+SHA256:
+ 853264f26a84bb01717132c25278b1ad39bf6d0b39011a64720367a442323d96 611 Packages
+ 3734f8024cd4fa47e47d15d3ac42a46a5a109d163bd4a1c51f56974d5824a99a 434 Packages.gz
+ 1336d736c6256e4eaa68347ef4df046fd0d9dd7843052be587a71aa06914a07d 455 Packages.bz2

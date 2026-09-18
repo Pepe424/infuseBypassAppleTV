@@ -2,16 +2,16 @@ Origin: Pepe424
 Label: InfuseSecurityTest
 Suite: stable
 Codename: stable
-Version: 1.1
+Version: 1.1.1
 Architectures: appletvos-arm64
 Components: main
-Description: Diagnostic telemetry packages for Infuse on jailbroken tvOS
-Date: Fri, 18 Sep 2026 14:52:11 UTC
+Description: Defensive telemetry package for Infuse on jailbroken tvOS
+Date: Fri, 18 Sep 2026 15:01:26 UTC
 MD5Sum:
- 66c73e5fd042803dac5c8fe699e3086d 685 Packages
- 2079e03025733c8ca08f9becc79d5033 453 Packages.gz
- 21f8ca24f968539a1ddf816228d1741e 505 Packages.bz2
+ c56e54ac681190f458beb3f1593ba0be 694 Packages
+ fc60c94bf80f2ad96e9efd817c183070 454 Packages.gz
+ be5a353b2c860ca8875423ebcf690b40 503 Packages.bz2
 SHA256:
- 2a959bddcbf8c10b165bb55f6aec4fd6b5006aa9c8680332ae92d86ab9a410b3 685 Packages
- 1a8c646e1271b382ea9865743c6e9bfff25a3d843190262b44aebdc7a076506e 453 Packages.gz
- 9bc34e1f783780addbfa92973f6306e4ee63a48c0b3137817422e41ebb298a09 505 Packages.bz2
+ 38a6cb4eaabafee0bb725bf064fed98a5bc9a7ea3fe5d37f460ff88821c7f957 694 Packages
+ 3fe81ec218fb627ec77a05c51877c60e598d76e5c80f622bfe581c73375e792d 454 Packages.gz
+ 6f286520f043d740b94abb12a6718cc50eb470ee2e99d53a1c6468ed8522df76 503 Packages.bz2
